@@ -1,5 +1,7 @@
 var listOfAllPeople = [];
 let tdPeople =[];
+let adress = [];
+let pressedButton = true;
 
 window.onload = function() {
     view();
@@ -24,13 +26,11 @@ function view() {
     
 
     `;
-    if(listOfAllPeople.length != 0){
+    if(pressedButton){
 
         html +=
         `<table id="tablesPeople">
             <tr>
-                <th scope="col">Nummer</th>
-                <th scope="col">Navn</th>
             </tr>
                 ${tdPeople}
         </table>`;
@@ -39,59 +39,51 @@ function view() {
     app.innerHTML = html;
 }
 
-function loopAllPeople() {
-    for(let i=0; i <= listOfAllPeople[0].length; i++) {
-        console.log(i);
-        let peopleList = listOfAllPeople[0][i];
-        console.log(peopleList);
-        let peopleadress = peopleList;
-        let peopleWithMom = peopleList;
-        if(peopleList['adress'] != null)
-        {
-            peopleadress = Object.values(peopleList['adress']); 
-        }
 
-        if(peopleList['mom'] != null)
-        {
-            peopleWithMom = Object.values(peopleList['mom']); 
-        }
-        tdPeople += `
-        <tr>
-            <td>
-            ${i}
-            </td>
-            <td>
-            ${"Name: "+ peopleList['firstName'] + "Mom:"  + "Adress: " + Object.values(peopleadress) } </td></tr>`;
-        
-    view();
-    }
+function showAdress() {
+    tdPeople = [];
+for(const pers of inputModel[0]) {
+    console.log(JSON.stringify(pers));
+    
+    tdPeople += /*HTML*/`
+    <tr>
+    <td>
+    ${JSON.stringify(pers)}
+    <button onclick="joe(mama)">X</button>
+    </td>
+    </tr>
+    `;
+    
+    tdPeople 
 }
 
-const object1 = {
-    a: "noe",
-    b: 42, 
-    c: false
-};
-//Her henter den ut alle verdiene i objektet selv om det er ulike verdityper og viser de i console-loggen
-console.log(Object.values(object1))
-
-function getAll() {
-    axios.get('https://localhost:7147/all')
-    .then((res) => {
-        listOfAllPeople.push(res.data)
-    })
-    .catch((err) => console.log(err))
-     Promise.all(listOfAllPeople).then(()=> loopAllPeople());
 }
+// function getAll() {
+//     axios.get('https://localhost:7147/all')
+//     .then((res) => {
+//         listOfAllPeople.push(res.data)
+//     })
+//     .catch((err) => console.log(err))
+//      Promise.all(listOfAllPeople).then(()=> loopAllPeople());
+// }
 
-function _getAll() {
-    axios.get('https://localhost:7147/all')
+async function _getAll() {
+    // inputModel = [];
+    await axios.get('https://localhost:7147/all')
     .then((res) => {
         inputModel.push(res.data)
-        console.log(res);
+        // console.log(inputModel);
     })
     .catch((err) => console.log(err))
-      Promise.all(inputModel).then(()=> loopAllPeople());
+    Promise.all(inputModel).then(()=> showAdress());
+    if(pressedButton) {
+    pressedButton = false;
+  }
+  
+  else {
+    pressedButton = true;
+}
+view();
 }
 
 function createPerson() {
