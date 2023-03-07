@@ -42,10 +42,38 @@ function view() {
 function loopAllPeople() {
     for(let i=0; i <= listOfAllPeople[0].length; i++) {
         console.log(i);
-        tdPeople += `<tr><td>${i}</td><td>${listOfAllPeople[0][i]}</td></tr>`;
+        let peopleList = listOfAllPeople[0][i];
+        console.log(peopleList);
+        let peopleadress = peopleList;
+        let peopleWithMom = peopleList;
+        if(peopleList['adress'] != null)
+        {
+            peopleadress = Object.values(peopleList['adress']); 
+        }
+
+        if(peopleList['mom'] != null)
+        {
+            peopleWithMom = Object.values(peopleList['mom']); 
+        }
+        tdPeople += `
+        <tr>
+            <td>
+            ${i}
+            </td>
+            <td>
+            ${"Name: "+ peopleList['firstName'] + "Mom:"  + "Adress: " + Object.values(peopleadress) } </td></tr>`;
+        
     view();
     }
 }
+
+const object1 = {
+    a: "noe",
+    b: 42, 
+    c: false
+};
+//Her henter den ut alle verdiene i objektet selv om det er ulike verdityper og viser de i console-loggen
+console.log(Object.values(object1))
 
 function getAll() {
     axios.get('https://localhost:7147/all')
@@ -53,9 +81,18 @@ function getAll() {
         listOfAllPeople.push(res.data)
     })
     .catch((err) => console.log(err))
-    Promise.all(listOfAllPeople).then(()=> loopAllPeople());
+     Promise.all(listOfAllPeople).then(()=> loopAllPeople());
 }
 
+function _getAll() {
+    axios.get('https://localhost:7147/all')
+    .then((res) => {
+        inputModel.push(res.data)
+        console.log(res);
+    })
+    .catch((err) => console.log(err))
+      Promise.all(inputModel).then(()=> loopAllPeople());
+}
 
 function createPerson() {
     axios.post('https://localhost:7147/personobject', person)
