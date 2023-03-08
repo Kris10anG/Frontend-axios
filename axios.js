@@ -1,9 +1,9 @@
 var listOfAllPeople = [];
-let tdPeople =[];
+let tdPeople = [];
 let adress = [];
 let pressedButton = true;
 
-window.onload = function() {
+window.onload = function () {
     view();
 }
 
@@ -26,36 +26,35 @@ function view() {
     
 
     `;
-    if(pressedButton){
+    if (pressedButton) {
 
         html +=
-        `<table id="tablesPeople">
+            `<table id="tablesPeople">
             <tr>
             </tr>
                 ${tdPeople}
         </table>`;
-        }
-    
+    }
+
     app.innerHTML = html;
 }
 
 
 function showAdress() {
+
     tdPeople = [];
-for(const pers of inputModel[0]) {
-    console.log(JSON.stringify(pers));
-    
-    tdPeople += /*HTML*/`
+    for (const pers of inputModel) {
+        // console.log(JSON.stringify(pers));
+
+        tdPeople += /*HTML*/`
     <tr>
     <td>
     ${JSON.stringify(pers)}
-    <button onclick="joe(mama)">X</button>
+    <button onclick="deletePerson(${pers['id']})">X</button>
     </td>
     </tr>
     `;
-    
-    tdPeople 
-}
+    }
 
 }
 // function getAll() {
@@ -66,29 +65,41 @@ for(const pers of inputModel[0]) {
 //     .catch((err) => console.log(err))
 //      Promise.all(listOfAllPeople).then(()=> loopAllPeople());
 // }
+async function deletePerson(id) {
+    axios.delete('https://localhost:7147/' + id)
+        .then(() => console.log("DELETED"))
+        .catch((err) => console.log(err));
+    _getAll();
 
-async function _getAll() {
-    // inputModel = [];
-    await axios.get('https://localhost:7147/all')
-    .then((res) => {
-        inputModel.push(res.data)
-        // console.log(inputModel);
-    })
-    .catch((err) => console.log(err))
-    Promise.all(inputModel).then(()=> showAdress());
-    if(pressedButton) {
-    pressedButton = false;
-  }
-  
-  else {
-    pressedButton = true;
 }
-view();
+function _getAll() {
+    inputModel = [];
+    _getAll1();
+    
+}
+
+async function _getAll1() {
+    await axios.get('https://localhost:7147/all')
+        .then((res) => {
+            inputModel = (res.data)
+            // console.log(inputModel);
+        })
+        .catch((err) => console.log(err));
+    // Promise.all(inputModel).then(() => showAdress());
+    showAdress();
+    if (pressedButton) {
+        pressedButton = false;
+    }
+
+    else {
+        pressedButton = true;
+    }
+    // view();
 }
 
 function createPerson() {
     axios.post('https://localhost:7147/personobject', person)
-    .then(function (response) {
-        console.table(response.data)
-    })
+        .then(function (response) {
+            console.table(response.data)
+        })
 }
