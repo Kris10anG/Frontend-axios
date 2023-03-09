@@ -23,8 +23,7 @@ function view() {
     <input id="postNumber" placeholder="postNumber" type="number" min="0" onchange="person.adress.postNumber = this.value">
     <input id="postPlace" placeholder="postPlace" type="text" onchange="person.adress.postPlace = this.value">
     <input id="country" placeholder="country" type="text" onchange="person.adress.country = this.value">
-    
-
+    <div>${showAdress()}</div>
     `;
     if (pressedButton) {
 
@@ -39,23 +38,28 @@ function view() {
     app.innerHTML = html;
 }
 
+//Endre funksjonsnavnene
+//Tegne opp en figma/Skisse av hvordan d skal se ut
 
 function showAdress() {
 
-    tdPeople = [];
-    for (const pers of inputModel) {
-        // console.log(JSON.stringify(pers));
+    // tdPeople = [];
+    for (const pers in inputModel) {
+        console.table(pers);
+        let json = JSON.stringify(pers);
+        console.log(JSON.stringify(pers));
 
         tdPeople += /*HTML*/`
     <tr>
     <td>
-    ${JSON.stringify(pers)}
+    ${json}
     <button onclick="deletePerson(${pers['id']})">X</button>
     </td>
     </tr>
     `;
+    
     }
-
+return tdPeople;
 }
 // function getAll() {
 //     axios.get('https://localhost:7147/all')
@@ -94,7 +98,7 @@ async function _getAll1() {
     else {
         pressedButton = true;
     }
-    // view();
+    view();
 }
 
 function createPerson() {
